@@ -1,0 +1,32 @@
+# Maintainer: ckrmml
+
+pkgname='i3-workspace-names-daemon-git'
+_pkgname='i3-workspace-names-daemon'
+pkgver=r63.87ad247
+pkgrel=1
+pkgdesc="A daemon script to dynamically update workspace names in i3wm based on their content."
+arch=('any')
+_giturl="://github.com/cboddy/i3-workspace-names-daemon"
+url="https${_giturl}"
+license=('MIT')
+depends=('python' 'i3-wm' 'python-i3ipc')
+makedepends=('git' 'python-setuptools')
+provides=("${_pkgname}")
+conflicts=("${_pkgname}")
+source=("git${_giturl}.git")
+md5sums=('SKIP')
+
+pkgver() {
+  cd "${_pkgname}"
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+    cd "${srcdir}/${_pkgname}"
+    python setup.py build
+}
+
+package() {
+    cd "${srcdir}/${_pkgname}"
+    python setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+}
